@@ -1,0 +1,16 @@
+﻿namespace tabuleiro
+{
+    class Tabuleiro
+    {
+        public int linhas { get; set; }
+        public int colunas { get; set; }
+        private Peca[,] pecas; // Privativa, pois só o Tabuleiro mexe nas peças.
+
+        public Tabuleiro(int linhas, int colunas)
+        {
+            this.linhas = linhas;
+            this.colunas = colunas;
+            this.pecas = new Peca[linhas,colunas];
+        }
+    }
+}
