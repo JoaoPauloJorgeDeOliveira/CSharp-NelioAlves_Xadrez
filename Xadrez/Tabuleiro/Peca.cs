@@ -1,6 +1,6 @@
 ﻿namespace tabuleiro
 {
-    class Peca
+    abstract class Peca
     {
         public Posicao posicao { get; set; }
         public Cor cor { get; protected set; }
@@ -19,5 +19,12 @@
         {
             qtdMovimentos++;
         }
+
+        /// <summary>
+        /// Cria matriz de posições possíveis para a peça.
+        /// Sobrescrita em cada peça para as devidas particularidades.
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool[,] movimentosPossiveis();
     }
 }

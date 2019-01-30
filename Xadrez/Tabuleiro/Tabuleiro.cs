@@ -52,6 +52,11 @@
             return aux;                             // Retorna peça retirada.
         }
 
+        /// <summary>
+        /// Checa se posição informada é válida no tabuleiro.
+        /// </summary>
+        /// <param name="pos">Posição a ser checada</param>
+        /// <returns></returns>
         public bool posicaoValida(Posicao pos)
         {
             if (pos.Linha < 0 || pos.Coluna < 0 || pos.Linha > linhas - 1 || pos.Coluna > colunas - 1)
