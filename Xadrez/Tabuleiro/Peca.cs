@@ -38,5 +38,33 @@
         /// </summary>
         /// <returns></returns>
         public abstract bool[,] movimentosPossiveis();
+
+        /// <summary>
+        /// Verifica se há pelo menos 1 movimento possível ou se peça está bloqueada.
+        /// </summary>
+        /// <returns></returns>
+        public bool existemMovimentosPossiveis()
+        {
+            bool[,] mat = movimentosPossiveis();
+            for (int i = 0; i < tab.linhas; i++)
+            {
+                for (int j = 0; j < tab.colunas; j++)
+                {
+                    if (mat[i,j] == true)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Retorna se é possível mover pela para posição 'pos'.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public bool podeMoverPara(Posicao pos)
+        {
+            return movimentosPossiveis()[pos.Linha, pos.Coluna];
+        }
     }
 }
