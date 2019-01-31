@@ -18,6 +18,11 @@ namespace xadrez
             colocarPecas();
         }
 
+        /// <summary>
+        /// Executa o movimento da peça.
+        /// </summary>
+        /// <param name="origem"></param>
+        /// <param name="destino"></param>
         public void executaMovimento(Posicao origem, Posicao destino)
         {
             Peca p = tab.retirarPeca(origem);               // Tira a peça que está na origem.
@@ -26,6 +31,11 @@ namespace xadrez
             tab.colocarPeca(p, destino);                    // Coloca a peça que estava na origem no destino.
         }
 
+        /// <summary>
+        /// Executa o movimento, itera o turno, muda jogador.
+        /// </summary>
+        /// <param name="origem"></param>
+        /// <param name="destino"></param>
         public void realizaJogada(Posicao origem, Posicao destino)
         {
             executaMovimento(origem, destino);
@@ -33,11 +43,13 @@ namespace xadrez
 
             // Muda Jogador
             if (jogadorAtual == Cor.Branca)
+            {
                 jogadorAtual = Cor.Preta;
+            }
             else
+            {
                 jogadorAtual = Cor.Branca;
-
-
+            }
         }
 
         /// <summary>
@@ -68,6 +80,10 @@ namespace xadrez
                 throw new TabuleiroException("Peça não pode mover para esta posição.");
         }
 
+        /// <summary>
+        /// Método auxiliar, apenas para testes.
+        /// Coloca diversas peças no tabuleiro.
+        /// </summary>
         private void colocarPecas()
         {
             tab.colocarPeca(new Torre(tab, Cor.Branca), new PosicaoXadrez('c', 1).toPosicao());
