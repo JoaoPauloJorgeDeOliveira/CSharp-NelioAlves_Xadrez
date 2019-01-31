@@ -21,6 +21,18 @@
         }
 
         /// <summary>
+        /// Testa se peça pode mover para posição 'pos', ou seja,
+        /// se posição está vazia ou ocupada por peça adversária (outra cor).
+        /// </summary>
+        /// <param name="pos">Posição a ser testada.</param>
+        /// <returns></returns>
+        protected bool podeMover(Posicao pos)
+        {
+            Peca p = tab.peca(pos);
+            return (p == null) || (p.cor != cor);
+        }
+
+        /// <summary>
         /// Cria matriz de posições possíveis para a peça.
         /// Sobrescrita em cada peça para as devidas particularidades.
         /// </summary>

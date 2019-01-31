@@ -20,61 +20,42 @@ namespace xadrez
 
             // Acima:
             pos.definirValores(posicao.Linha - 1, posicao.Coluna);
-            if (tab.posicaoValida(pos) && podeMover(pos))
+            while (tab.posicaoValida(pos) && podeMover(pos))
             {
                 matrizValida[pos.Linha, pos.Coluna] = true;
+                if (tab.peca(pos) != null && tab.peca(pos).cor != cor)  // Se chegou numa posição onde há peça de outra cor, para a conferência de casas.
+                    break;
+                pos.Linha--;    // Diminui linha (sobre no tabuleiro).
             }
-            // Diagonal superior direita:
-            pos.definirValores(posicao.Linha - 1, posicao.Coluna + 1);
-            if (tab.posicaoValida(pos) && podeMover(pos))
+            // Acima:
+            pos.definirValores(posicao.Linha + 1, posicao.Coluna);
+            while (tab.posicaoValida(pos) && podeMover(pos))
             {
                 matrizValida[pos.Linha, pos.Coluna] = true;
+                if (tab.peca(pos) != null && tab.peca(pos).cor != cor)  // Se chegou numa posição onde há peça de outra cor, para a conferência de casas.
+                    break;
+                pos.Linha++;    // Aumenta linha (desce no tabuleiro).
             }
             // Direita:
             pos.definirValores(posicao.Linha, posicao.Coluna + 1);
-            if (tab.posicaoValida(pos) && podeMover(pos))
+            while (tab.posicaoValida(pos) && podeMover(pos))
             {
                 matrizValida[pos.Linha, pos.Coluna] = true;
-            }
-            // Diagonal inferior direita:
-            pos.definirValores(posicao.Linha + 1, posicao.Coluna + 1);
-            if (tab.posicaoValida(pos) && podeMover(pos))
-            {
-                matrizValida[pos.Linha, pos.Coluna] = true;
-            }
-            // Abaixo:
-            pos.definirValores(posicao.Linha + 1, posicao.Coluna);
-            if (tab.posicaoValida(pos) && podeMover(pos))
-            {
-                matrizValida[pos.Linha, pos.Coluna] = true;
-            }
-            // Diagonal inferior esquerda:
-            pos.definirValores(posicao.Linha + 1, posicao.Coluna - 1);
-            if (tab.posicaoValida(pos) && podeMover(pos))
-            {
-                matrizValida[pos.Linha, pos.Coluna] = true;
+                if (tab.peca(pos) != null && tab.peca(pos).cor != cor)  // Se chegou numa posição onde há peça de outra cor, para a conferência de casas.
+                    break;
+                pos.Coluna++;    // Aumenta coluna (vai para direita).
             }
             // Esquerda:
             pos.definirValores(posicao.Linha, posicao.Coluna - 1);
-            if (tab.posicaoValida(pos) && podeMover(pos))
+            while (tab.posicaoValida(pos) && podeMover(pos))
             {
                 matrizValida[pos.Linha, pos.Coluna] = true;
+                if (tab.peca(pos) != null && tab.peca(pos).cor != cor)  // Se chegou numa posição onde há peça de outra cor, para a conferência de casas.
+                    break;
+                pos.Coluna--;    // Diminui coluna (vai para esquerda).
             }
-            // Diagonal superior esquerda:
-            pos.definirValores(posicao.Linha - 1, posicao.Coluna - 1);
-            if (tab.posicaoValida(pos) && podeMover(pos))
-            {
-                matrizValida[pos.Linha, pos.Coluna] = true;
-            }
-
+            
             return matrizValida;
-        }
-
-        // Testa se peça pode mover para posição pos.
-        private bool podeMover(Posicao pos)
-        {
-            Peca p = tab.peca(pos);
-            return (p == null) || (p.cor != cor); // Pode mover se pos está vazia (nula) ou se há peça adversária (outra cor).
         }
 
         public override string ToString()

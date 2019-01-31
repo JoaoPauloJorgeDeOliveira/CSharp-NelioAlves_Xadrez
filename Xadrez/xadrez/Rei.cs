@@ -70,13 +70,6 @@ namespace xadrez
             return matrizValida;
         }
 
-        // Testa se peça pode mover para posição pos.
-        private bool podeMover(Posicao pos)
-        {
-            Peca p = tab.peca(pos);
-            return (p == null) || (p.cor != cor); // Pode mover se pos está vazia (nula) ou se há peça adversária (outra cor).
-        }
-
         public override string ToString()
         {
             return "R";
