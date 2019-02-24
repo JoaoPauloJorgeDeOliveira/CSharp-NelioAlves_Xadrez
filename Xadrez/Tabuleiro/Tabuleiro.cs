@@ -4,13 +4,13 @@
     {
         public int linhas { get; set; }
         public int colunas { get; set; }
-        private Peca[,] pecas; // Privativa, pois só o Tabuleiro mexe nas peças.
+        private Peca[,] pecas;              // Matriz de peças. Privativa, pois só o Tabuleiro mexe nas peças.
 
         public Tabuleiro(int linhas, int colunas)
         {
             this.linhas = linhas;
             this.colunas = colunas;
-            this.pecas = new Peca[linhas, colunas];
+            this.pecas = new Peca[linhas, colunas];     // Intancia matriz de peças com a quantidade de linhas e colunas do tabuleiro.
         }
 
         public Peca peca(int Linha, int Coluna)
@@ -73,10 +73,5 @@
                 throw new TabuleiroException("Posição inválida.");
             }
         }
-
-
-
-
-
     }
 }
