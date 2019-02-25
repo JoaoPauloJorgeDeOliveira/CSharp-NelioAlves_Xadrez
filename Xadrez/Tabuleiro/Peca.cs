@@ -15,9 +15,14 @@
             this.qtdMovimentos = 0;
         }
 
-        public void incrementaQtdMovimentos()
+        public void incrementarQtdMovimentos()
         {
             qtdMovimentos++;
+        }
+
+        public void decrementarQtdMovimentos()
+        {
+            qtdMovimentos--;
         }
 
         /// <summary>
