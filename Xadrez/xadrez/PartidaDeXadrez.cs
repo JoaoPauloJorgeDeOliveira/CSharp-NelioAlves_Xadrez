@@ -141,7 +141,7 @@ namespace xadrez
         public void validaPosicaDestino(Posicao origem, Posicao destino)
         {
             // Testa se movimentação é possível:
-            if (!tab.peca(origem).podeMoverPara(destino))
+            if (!tab.peca(origem).movimentoPossivel(destino))
                 throw new TabuleiroException("Peça não pode mover para esta posição.");
         }
 
