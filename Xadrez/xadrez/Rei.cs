@@ -4,8 +4,34 @@ namespace xadrez
 {
     class Rei : Peca
     {
-        public Rei(Tabuleiro tab, Cor cor) : base(tab, cor)
+        private PartidaDeXadrez partida;
+
+        // Construtor:
+        public Rei(Tabuleiro tab, Cor cor, PartidaDeXadrez partida) : base(tab, cor)
         {
+            this.partida = partida;
+        }
+
+        public override string ToString()
+        {
+            return "R";
+        }
+
+        /// <summary>
+        /// Testa se torre na posição 'pos' está apta para executar o roque com o rei.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        private bool testeTorreParaRoque(Posicao pos)
+        {
+            Peca p = tab.peca(pos);
+
+            // Pode fazer roque se: 
+            //  Há uma peça em 'pos';
+            //  Esta peça é uma torre;
+            //  Esta peça é da mesma cor que o Rei; e
+            //  Esta peça não se moveu ainda.
+            return p != null && p is Torre && p.cor == cor && p.qtdMovimentos == 0;
         }
 
         /// <summary>
@@ -67,12 +93,42 @@ namespace xadrez
                 matrizValida[pos.Linha, pos.Coluna] = true;
             }
 
+            // Jogadas Especiais:
+            if (qtdMovimentos == 0 && partida.xeque == false)
+            {
+                // Roque pequeno:
+                Posicao posT1 = new Posicao(posicao.Linha, posicao.Coluna + 3); // Posição suposta da torre.
+
+                if (testeTorreParaRoque(posT1)) // Se posição 'pos' é elegível para roque:
+                {
+                    // Se não há peças entre rei e torre:
+                    Posicao p1 = new Posicao(posicao.Linha, posicao.Coluna + 1);
+                    Posicao p2 = new Posicao(posicao.Linha, posicao.Coluna + 2);
+                    if (tab.peca(p1) == null && tab.peca(p2) == null)
+                    {
+                        matrizValida[posicao.Linha, posicao.Coluna + 2] = true;
+                    }
+                }
+
+                // Roque grande:
+                Posicao posT2 = new Posicao(posicao.Linha, posicao.Coluna - 4); // Posição suposta da torre.
+
+                if (testeTorreParaRoque(posT2)) // Se posição 'pos' é elegível para roque:
+                {
+                    // Se não há peças entre rei e torre:
+                    Posicao p1 = new Posicao(posicao.Linha, posicao.Coluna - 1);
+                    Posicao p2 = new Posicao(posicao.Linha, posicao.Coluna - 2);
+                    Posicao p3 = new Posicao(posicao.Linha, posicao.Coluna - 3);
+                    if (tab.peca(p1) == null && tab.peca(p2) == null && tab.peca(p3) == null)
+                    {
+                        matrizValida[posicao.Linha, posicao.Coluna - 2] = true;
+                    }
+                }
+            }
+
             return matrizValida;
         }
 
-        public override string ToString()
-        {
-            return "R";
-        }
+
     }
 }
