@@ -12,6 +12,7 @@ namespace xadrez
         private HashSet<Peca> pecas;                // Guarda todas as pedas da partida.
         private HashSet<Peca> capturadas;           // Guarda todas as peças capturadas.
         public bool xeque { get; private set; }     // True se alguém está em xeque,
+        public Peca vulneravelEnPassant { get; private set; }   // Pega peão se este estiver suscetível à jogada En Passant.
 
 
         public PartidaDeXadrez()
@@ -21,7 +22,8 @@ namespace xadrez
             jogadorAtual = Cor.Branca;
             terminada = false;
             xeque = false;
-            
+            vulneravelEnPassant = null;
+
             // Instanciando conjuntos:
             pecas = new HashSet<Peca>();
             capturadas = new HashSet<Peca>();
@@ -72,7 +74,23 @@ namespace xadrez
                 tab.colocarPeca(T, destinoTorre);
             }
 
-
+            // Jogada Especial: En Passant:
+            // Se peça é peão, mexeu na diagonal e não houve peça capturada:
+            if (p is Peao && origem.Coluna != destino.Coluna && pecaCapturada == null)
+            {
+                Posicao posPeaoCapturado;
+                if (p.cor == Cor.Branca)
+                {
+                    posPeaoCapturado = new Posicao(destino.Linha + 1, destino.Coluna);
+                }
+                else
+                {
+                    posPeaoCapturado = new Posicao(destino.Linha - 1, destino.Coluna);
+                }
+                pecaCapturada = tab.retirarPeca(posPeaoCapturado);
+                capturadas.Add(pecaCapturada);
+            }
+            
             return pecaCapturada;
         }
 
@@ -120,6 +138,25 @@ namespace xadrez
                 Peca T = tab.retirarPeca(destinoTorre);
                 T.decrementarQtdMovimentos();
                 tab.colocarPeca(T, origemTorre);
+            }
+
+            // Jogada Especial: En Passant:
+            // Se peça é peão, mexeu na diagonal e peça capturada foi a vulnerável à jogada En Passant:
+            if (p is Peao && origem.Coluna != destino.Coluna && pecaCapturada == vulneravelEnPassant)
+            {
+                Peca peaoCapturado = tab.retirarPeca(destino); // Retira peão que foi retornado para o local errado.
+                Posicao posPeaoCapturou;
+
+                if (p.cor == Cor.Branca)
+                {
+                    posPeaoCapturou = new Posicao(3, destino.Coluna);
+                }
+                else
+                {
+                    posPeaoCapturou = new Posicao(4, destino.Coluna);
+                }
+                tab.colocarPeca(peaoCapturado, posPeaoCapturou);
+                capturadas.Remove(peaoCapturado); // Professor não colocou.
             }
 
         }
@@ -170,6 +207,20 @@ namespace xadrez
                     jogadorAtual = Cor.Branca;
                 }
             }
+
+            // Jogada especial: En Passant:
+            Peca p = tab.peca(destino);
+            // Se for peão e [moveu duas casas para baixo (preta) ou moveu duas casas para cima (branca)]
+            if (p is Peao && ((destino.Linha == origem.Linha - 2) || (destino.Linha == origem.Linha + 2)))
+            {
+                vulneravelEnPassant = p;
+            }
+            // Se nessa jogada não há um peão en passant, anula variável novamente (jogada só pode ser executada imediatamente após a movimentação do peão.
+            else
+            {
+                vulneravelEnPassant = null;
+            }
+            
 
         }
 
@@ -363,14 +414,14 @@ namespace xadrez
             colocarNovaPeca('g', 1, new Cavalo(tab, Cor.Branca));
             colocarNovaPeca('h', 1, new Torre(tab, Cor.Branca));
 
-            colocarNovaPeca('a', 2, new Peao(tab, Cor.Branca));
-            colocarNovaPeca('b', 2, new Peao(tab, Cor.Branca));
-            colocarNovaPeca('c', 2, new Peao(tab, Cor.Branca));
-            colocarNovaPeca('d', 2, new Peao(tab, Cor.Branca));
-            colocarNovaPeca('e', 2, new Peao(tab, Cor.Branca));
-            colocarNovaPeca('f', 2, new Peao(tab, Cor.Branca));
-            colocarNovaPeca('g', 2, new Peao(tab, Cor.Branca));
-            colocarNovaPeca('h', 2, new Peao(tab, Cor.Branca));
+            colocarNovaPeca('a', 2, new Peao(tab, Cor.Branca, this));
+            colocarNovaPeca('b', 2, new Peao(tab, Cor.Branca, this));
+            colocarNovaPeca('c', 2, new Peao(tab, Cor.Branca, this));
+            colocarNovaPeca('d', 2, new Peao(tab, Cor.Branca, this));
+            colocarNovaPeca('e', 2, new Peao(tab, Cor.Branca, this));
+            colocarNovaPeca('f', 2, new Peao(tab, Cor.Branca, this));
+            colocarNovaPeca('g', 2, new Peao(tab, Cor.Branca, this));
+            colocarNovaPeca('h', 2, new Peao(tab, Cor.Branca, this));
 
             colocarNovaPeca('a', 8, new Torre(tab, Cor.Preta));
             colocarNovaPeca('b', 8, new Cavalo(tab, Cor.Preta));
@@ -381,14 +432,14 @@ namespace xadrez
             colocarNovaPeca('g', 8, new Cavalo(tab, Cor.Preta));
             colocarNovaPeca('h', 8, new Torre(tab, Cor.Preta));
 
-            colocarNovaPeca('a', 7, new Peao(tab, Cor.Preta));
-            colocarNovaPeca('b', 7, new Peao(tab, Cor.Preta));
-            colocarNovaPeca('c', 7, new Peao(tab, Cor.Preta));
-            colocarNovaPeca('d', 7, new Peao(tab, Cor.Preta));
-            colocarNovaPeca('e', 7, new Peao(tab, Cor.Preta));
-            colocarNovaPeca('f', 7, new Peao(tab, Cor.Preta));
-            colocarNovaPeca('g', 7, new Peao(tab, Cor.Preta));
-            colocarNovaPeca('h', 7, new Peao(tab, Cor.Preta));
+            colocarNovaPeca('a', 7, new Peao(tab, Cor.Preta, this));
+            colocarNovaPeca('b', 7, new Peao(tab, Cor.Preta, this));
+            colocarNovaPeca('c', 7, new Peao(tab, Cor.Preta, this));
+            colocarNovaPeca('d', 7, new Peao(tab, Cor.Preta, this));
+            colocarNovaPeca('e', 7, new Peao(tab, Cor.Preta, this));
+            colocarNovaPeca('f', 7, new Peao(tab, Cor.Preta, this));
+            colocarNovaPeca('g', 7, new Peao(tab, Cor.Preta, this));
+            colocarNovaPeca('h', 7, new Peao(tab, Cor.Preta, this));
         }
 
     }
