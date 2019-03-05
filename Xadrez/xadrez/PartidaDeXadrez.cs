@@ -177,6 +177,36 @@ namespace xadrez
                 throw new TabuleiroException("Você não pode se colocar em xeque!");
             }
 
+            Peca p = tab.peca(destino);
+
+            // Jogada especial: En Passant:
+            // Se for peão e [moveu duas casas para baixo (preta) ou moveu duas casas para cima (branca)]
+            if (p is Peao)
+            {
+                if ((destino.Linha == origem.Linha - 2) || (destino.Linha == origem.Linha + 2))
+                {
+                    vulneravelEnPassant = p;
+                }
+            }
+            // Se nessa jogada não há um peão en passant, anula variável novamente (jogada só pode ser executada imediatamente após a movimentação do peão.
+            else
+            {
+                vulneravelEnPassant = null;
+            }
+
+            // Jogada Especial: Promoção:
+            if (p is Peao)
+            {
+                if ((p.cor == Cor.Branca && destino.Linha == 0) || (p.cor == Cor.Preta && destino.Linha == 7))
+                {
+                    p = tab.retirarPeca(destino);
+                    pecas.Remove(p);
+                    Peca dama = new Dama(tab, p.cor);
+                    tab.colocarPeca(dama, destino);
+                    pecas.Add(dama);
+                }
+            }
+
             // Checando se adversário está em xeque:
             if (estaEmXeque(corAdversaria(jogadorAtual)))
             {
@@ -207,20 +237,6 @@ namespace xadrez
                     jogadorAtual = Cor.Branca;
                 }
             }
-
-            // Jogada especial: En Passant:
-            Peca p = tab.peca(destino);
-            // Se for peão e [moveu duas casas para baixo (preta) ou moveu duas casas para cima (branca)]
-            if (p is Peao && ((destino.Linha == origem.Linha - 2) || (destino.Linha == origem.Linha + 2)))
-            {
-                vulneravelEnPassant = p;
-            }
-            // Se nessa jogada não há um peão en passant, anula variável novamente (jogada só pode ser executada imediatamente após a movimentação do peão.
-            else
-            {
-                vulneravelEnPassant = null;
-            }
-            
 
         }
 
